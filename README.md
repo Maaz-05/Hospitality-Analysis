@@ -1,4 +1,4 @@
-# 🏨 AtliQ Hotels Data Analysis Project
+# 🏨 AtliQ Hospitality Analysis Project
 
 ## 📌 Project Overview
 
