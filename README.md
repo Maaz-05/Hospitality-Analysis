@@ -1,291 +1,371 @@
-# Hospitality-Analysis
+# 🏨 AtliQ Hotels Data Analysis Project
 
-````markdown
-# 🏨 AtliQ Hospitality Analysis
+## 📌 Project Overview
 
-An end-to-end Data Analysis project performed using Python and Pandas on AtliQ Hotels booking and revenue data. This project focuses on cleaning, transforming, analyzing, and visualizing hotel performance metrics to generate actionable business insights.
+This project performs an end-to-end **Exploratory Data Analysis (EDA)** on AtliQ Hotels booking and revenue data using **Python, Pandas, and Data Analytics techniques**.
 
----
+The objective of this project is to analyze hotel performance, occupancy trends, revenue generation, booking patterns, and customer behavior to generate meaningful business insights that can help hotel management improve operations and profitability.
 
-## 📖 Overview
+The project follows a complete analytics workflow:
 
-The hospitality industry generates massive amounts of booking and customer data. This project analyzes AtliQ Hotels' operational data to uncover patterns in occupancy, revenue generation, booking platforms, room categories, and customer ratings.
-
-The project demonstrates practical data analytics skills including:
-
-- Exploratory Data Analysis (EDA)
+- Data Import & Exploration
 - Data Cleaning
 - Data Transformation
-- Business Intelligence
-- Data Visualization
-- Feature Engineering
+- Exploratory Data Analysis
+- Business Insights Generation
+
 
 ---
 
-## 🎯 Business Objectives
+# 🛠️ Tools & Technologies Used
 
-This analysis aims to answer key business questions such as:
+- 🐍 Python
+- 🐼 Pandas
+- 📊 Matplotlib
+- 📈 Data Visualization
+- 📂 CSV Data Processing
+- 📓 Jupyter Notebook
 
-- Which room categories have the highest occupancy rates?
-- Which cities generate the most revenue?
-- How does occupancy vary between weekdays and weekends?
-- Which booking platforms contribute the most revenue?
-- What are the customer rating trends across cities?
-- How can hotel management optimize occupancy and profitability?
-
----
-
-## 📂 Dataset Description
-
-### 1. dim_date.csv
-Contains date-related information.
-
-| Column | Description |
-|----------|------------|
-| date | Calendar Date |
-| mmm yy | Month-Year |
-| day_type | Weekday / Weekend |
-
-### 2. dim_hotels.csv
-Contains hotel property details.
-
-| Column | Description |
-|----------|------------|
-| property_id | Hotel Identifier |
-| property_name | Hotel Name |
-| city | Hotel Location |
-| category | Hotel Category |
-
-### 3. dim_rooms.csv
-Contains room category information.
-
-| Column | Description |
-|----------|------------|
-| room_id | Room Identifier |
-| room_class | Room Type |
-
-### 4. fact_bookings.csv
-Contains booking-level transaction data.
-
-### 5. fact_aggregated_bookings.csv
-Contains aggregated occupancy and capacity information.
 
 ---
 
-## 🛠️ Tech Stack
+# 📂 Dataset Description
 
-- Python
-- Pandas
-- NumPy
-- Matplotlib
-- Jupyter Notebook
+The project contains multiple datasets:
+
+### Dimension Tables
+
+- **dim_date.csv**  
+  Contains date information, month, week number, and weekday/weekend details.
+
+- **dim_hotels.csv**  
+  Contains hotel details such as:
+  - Property Name
+  - Category
+  - City
+
+- **dim_rooms.csv**  
+  Contains room categories and room classes.
+
+
+### Fact Tables
+
+- **fact_bookings.csv**  
+  Contains booking-level details:
+  - Booking ID
+  - Guest information
+  - Booking platform
+  - Revenue details
+  - Booking status
+
+- **fact_aggregated_bookings.csv**  
+  Contains aggregated booking information:
+  - Successful bookings
+  - Room capacity
+  - Occupancy data
+
 
 ---
 
-## 📊 Project Workflow
+# 🔎 Data Exploration
 
-### 1. Data Exploration
+Initial exploration was performed to understand:
 
-- Understanding dataset structure
-- Checking data types
-- Identifying missing values
-- Exploring unique categories
-- Examining booking patterns
+- Dataset size
+- Data types
+- Unique values
+- Booking platforms
+- Room categories
+- Revenue distribution
+- Hotel information
 
-### 2. Data Cleaning
 
-#### Removing Invalid Guest Records
+### Dataset Size
 
-```python
-df_bookings = df_bookings[df_bookings.no_guests > 0]
-````
+Total booking records:
 
-#### Handling Missing Values
-
-Missing values in capacity were replaced using median values.
-
-```python
-df_agg_bookings['capacity'].fillna(df_agg_bookings['capacity'].median(), inplace=True)
+```
+134,590 rows
+12 columns
 ```
 
-#### Removing Revenue Outliers
 
-Applied the 3-Sigma Rule to identify and remove extreme outliers.
+### Booking Platforms Analyzed
 
-```python
-upper_limit = mean + 3 * std
-```
+The analysis covered different booking channels:
 
-#### Removing Invalid Capacity Records
+- Others
+- MakeYourTrip
+- Logtrip
+- Direct Online
+- Tripster
+- Journey
+- Direct Offline
 
-```python
-successful_bookings > capacity
-```
-
----
-
-### 3. Feature Engineering
-
-Created a new metric:
-
-#### Occupancy Percentage
-
-```python
-occupancy_pct = successful_bookings / capacity * 100
-```
-
-This metric was used throughout the analysis.
 
 ---
 
-## 📈 Key Analyses Performed
+# 🧹 Data Cleaning
 
-### Occupancy Analysis
+## Handling Invalid Guest Data
 
-* Occupancy by Room Category
-* Occupancy by City
-* Occupancy by Day Type (Weekday vs Weekend)
-* Occupancy Trends for June 2022
+Some records contained invalid guest counts:
 
-### Revenue Analysis
+Example:
 
-* Revenue by City
-* Revenue by Property
-* Revenue by Month
-* Revenue by Booking Platform
-
-### Customer Analysis
-
-* Average Ratings by City
-* Booking Behavior Insights
-
-### Data Integration
-
-* Merged booking, hotel, room, and date datasets
-* Appended new August booking data using:
-
-```python
-pd.concat()
+```
+no_guests <= 0
 ```
 
+These incorrect records were removed to maintain data accuracy.
+
+
 ---
 
-## 📊 Visualizations
+## Removing Revenue Outliers
 
-The project includes visual representations of:
+Revenue outliers were identified using:
 
-* Occupancy Rates
-* Revenue Distribution
-* Revenue by Booking Platform
-* City-wise Comparisons
-* Monthly Revenue Trends
+- Mean
+- Standard Deviation
+- 3 Sigma Method
 
-Visualization libraries used:
 
-```python
-import matplotlib.pyplot as plt
+Extreme incorrect revenue values were removed from analysis.
+
+
+---
+
+## Handling Missing Values
+
+### Ratings Column
+
+A large number of rating values were missing.
+
+Instead of replacing them with mean/median values, the missing values were retained because ratings represent actual customer feedback.
+
+
+### Capacity Column
+
+Missing capacity values in aggregated bookings were replaced using median values.
+
+
+---
+
+# 🔄 Data Transformation
+
+Created a new feature:
+
+## Occupancy Percentage
+
+Formula:
+
+```
+Occupancy % = Successful Bookings / Total Capacity × 100
 ```
 
----
 
-## 🔍 Key Insights
+This helped measure hotel utilization and performance.
 
-* Identified top-performing room categories.
-* Compared occupancy rates across cities.
-* Analyzed weekend vs weekday demand.
-* Measured city-wise revenue contribution.
-* Evaluated booking platform effectiveness.
-* Assessed customer satisfaction through ratings.
 
 ---
 
-## 📁 Project Structure
+# 📊 Business Insights Generated
 
-```text
-AtliQ-Hotels-Data-Analysis/
+
+## 1. Average Occupancy Rate by Room Category
+
+Room performance analysis showed:
+
+| Room Type | Average Occupancy |
+|---|---|
+| Presidential | 59.27% |
+| Premium | 58.02% |
+| Elite | 58.00% |
+| Standard | 57.88% |
+
+
+The Presidential category achieved the highest occupancy rate.
+
+
+---
+
+# 🌆 Occupancy Rate by City
+
+Average occupancy performance:
+
+| City | Occupancy |
+|-|-|
+| Delhi | 61.50% |
+| Hyderabad | 58.12% |
+| Mumbai | 57.90% |
+| Bangalore | 56.33% |
+
+
+Delhi showed the strongest occupancy performance.
+
+
+---
+
+# 📅 Weekday vs Weekend Analysis
+
+Occupancy comparison:
+
+| Day Type | Occupancy |
+|-|-|
+| Weekend | 72.34% |
+| Weekday | 50.88% |
+
+
+Hotels experienced significantly higher demand during weekends.
+
+
+---
+
+# 📍 June 2022 City Performance
+
+Occupancy rate during June:
+
+| City | Occupancy |
+|-|-|
+| Delhi | 62.47% |
+| Hyderabad | 58.46% |
+| Mumbai | 58.38% |
+| Bangalore | 56.44% |
+
+
+---
+
+# 💰 Revenue Analysis
+
+
+## Revenue Generated by City
+
+| City | Revenue Realized |
+|-|-|
+| Mumbai | 668M |
+| Bangalore | 420M |
+| Hyderabad | 325M |
+| Delhi | 294M |
+
+
+Mumbai generated the highest revenue contribution.
+
+
+---
+
+# 📆 Monthly Revenue Performance
+
+Revenue comparison:
+
+| Month | Revenue |
+|-|-|
+| May 2022 | 581M |
+| June 2022 | 553M |
+| July 2022 | 572M |
+
+
+May recorded the highest revenue.
+
+
+---
+
+# 🏨 Revenue by Property
+
+Top performing hotels:
+
+| Hotel | Revenue |
+|-|-|
+| Atliq Exotica | 320M |
+| Atliq Palace | 304M |
+| Atliq City | 285M |
+| Atliq Blu | 260M |
+
+
+Atliq Exotica generated the highest revenue.
+
+
+---
+
+# ⭐ Customer Rating Analysis
+
+Average ratings by city:
+
+| City | Rating |
+|-|-|
+| Delhi | 3.78 |
+| Hyderabad | 3.66 |
+| Mumbai | 3.65 |
+| Bangalore | 3.41 |
+
+
+Delhi received the highest customer ratings.
+
+
+---
+
+# 📌 Key Takeaways
+
+- Weekend demand is significantly higher than weekdays.
+- Delhi achieved the highest occupancy rate.
+- Mumbai contributed the highest revenue.
+- Presidential rooms had the highest occupancy.
+- Atliq Exotica was the top revenue-generating property.
+- Data cleaning improved reliability of business analysis.
+
+
+---
+
+# 🚀 Project Workflow
+
+```
+Raw Data
+   |
+   ↓
+Data Import
+   |
+   ↓
+Data Exploration
+   |
+   ↓
+Data Cleaning
+   |
+   ↓
+Feature Engineering
+   |
+   ↓
+Data Analysis
+   |
+   ↓
+Business Insights
+```
+
+
+---
+
+# 📁 Project Structure
+
+```
+AtliQ-Hotels-Analysis/
+
 │
 ├── datasets/
 │   ├── dim_date.csv
 │   ├── dim_hotels.csv
 │   ├── dim_rooms.csv
 │   ├── fact_bookings.csv
-│   ├── fact_aggregated_bookings.csv
-│   └── new_data_august.csv
+│   └── fact_aggregated_bookings.csv
 │
-├── Python Analysis.ipynb
-├── README.md
-└── requirements.txt
+├── AtliQ_Hotels_Analysis.ipynb
+│
+└── README.md
 ```
+
 
 ---
 
-## 🚀 Getting Started
+# 🎯 Conclusion
 
-### Clone the Repository
+This project demonstrates how data analytics can transform raw hotel booking data into actionable insights.
 
-```bash
-git clone https://github.com/yourusername/AtliQ-Hotels-Data-Analysis.git
-```
-
-### Navigate to Project Directory
-
-```bash
-cd AtliQ-Hotels-Data-Analysis
-```
-
-### Install Dependencies
-
-```bash
-pip install pandas numpy matplotlib
-```
-
-### Launch Jupyter Notebook
-
-```bash
-jupyter notebook
-```
-
-Open:
-
-```text
-Python Analysis.ipynb
-```
-
-and run all cells.
-
----
-
-## 📚 Skills Demonstrated
-
-* Data Cleaning
-* Exploratory Data Analysis (EDA)
-* Data Transformation
-* Feature Engineering
-* Statistical Analysis
-* Data Visualization
-* Business Analytics
-* Problem Solving
-
----
-
-## 🔮 Future Enhancements
-
-* Interactive Power BI Dashboard
-* Revenue Forecasting Models
-* Hotel Demand Prediction
-* Customer Segmentation
-* KPI Dashboard Development
-* Machine Learning-Based Insights
-
----
-
-## 👨‍💻 Author
-
-**Sharia Zaman**
-
-Aspiring Data Analyst | Python | SQL | Power BI
-
-If you found this project helpful, consider giving it a ⭐ on GitHub.
-
-```
-```
+Using Python and Pandas, the analysis uncovered important trends in occupancy, revenue, customer ratings, and booking behavior that can support better business decisions.
